@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, forwardRef } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 type ButtonSize = "sm" | "md";
@@ -22,12 +22,10 @@ const sizeClasses: Record<ButtonSize, string> = {
   md: "px-5 py-2.5 text-sm",
 };
 
-export default function Button({
-  variant = "primary",
-  size = "md",
-  className = "",
-  ...props
-}: ButtonProps) {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = "primary", size = "md", className = "", ...props },
+  ref,
+) {
   const classes = [
     "transition-colors",
     variantClasses[variant],
@@ -37,5 +35,7 @@ export default function Button({
     .filter(Boolean)
     .join(" ");
 
-  return <button className={classes} {...props} />;
-}
+  return <button ref={ref} className={classes} {...props} />;
+});
+
+export default Button;

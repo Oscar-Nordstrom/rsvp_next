@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import Button from "@/app/_components/Button";
+import ConfirmButton from "@/app/_components/ConfirmButton";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
 
 export default async function AdminPage() {
@@ -57,9 +58,15 @@ export default async function AdminPage() {
               </form>
               <form action={deleteGuest}>
                 <input type="hidden" name="id" value={guest.id} />
-                <Button type="submit" variant="danger" size="sm">
+                <ConfirmButton
+                  variant="danger"
+                  size="sm"
+                  confirmTitle="Remove guest?"
+                  confirmMessage={`This will remove ${guest.name} and their RSVP link. This can't be undone.`}
+                  confirmLabel="Remove"
+                >
                   Remove
-                </Button>
+                </ConfirmButton>
               </form>
             </div>
             <div className="text-xs text-subtle">
