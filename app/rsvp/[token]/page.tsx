@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import Button from "@/app/_components/Button";
 import { submitRsvp } from "./actions";
 
 export default async function RsvpPage({
@@ -37,22 +38,18 @@ export default async function RsvpPage({
         <input type="hidden" name="token" value={token} />
 
         <div className="flex gap-3">
-          <button
-            type="submit"
-            name="attending"
-            value="true"
-            className="flex-1 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition-colors hover:bg-primary-hover"
-          >
+          <Button type="submit" name="attending" value="true" className="flex-1">
             Yes, I&apos;ll be there
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             name="attending"
             value="false"
-            className="flex-1 rounded-full border border-solid border-border px-5 py-3 text-sm font-medium transition-colors hover:border-transparent hover:bg-surface-hover"
+            variant="secondary"
+            className="flex-1"
           >
             Can&apos;t make it
-          </button>
+          </Button>
         </div>
 
         <label className="flex flex-col gap-1 text-sm text-muted">

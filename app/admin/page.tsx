@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import Button from "@/app/_components/Button";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
 
 export default async function AdminPage() {
@@ -21,12 +22,9 @@ export default async function AdminPage() {
           Guests
         </h1>
         <form action={logout}>
-          <button
-            type="submit"
-            className="text-sm text-subtle underline underline-offset-2"
-          >
+          <Button type="submit" variant="ghost">
             Log out
-          </button>
+          </Button>
         </form>
       </div>
 
@@ -38,12 +36,7 @@ export default async function AdminPage() {
           required
           className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-sm"
         />
-        <button
-          type="submit"
-          className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-colors hover:bg-primary-hover"
-        >
-          Add guest
-        </button>
+        <Button type="submit">Add guest</Button>
       </form>
 
       <ul className="flex flex-col divide-y divide-border">
@@ -58,21 +51,15 @@ export default async function AdminPage() {
                   defaultValue={guest.name}
                   className="flex-1 rounded-md border border-border bg-transparent px-3 py-1.5 text-sm"
                 />
-                <button
-                  type="submit"
-                  className="rounded-full border border-border px-3 py-1.5 text-xs font-medium"
-                >
+                <Button type="submit" variant="secondary" size="sm">
                   Save
-                </button>
+                </Button>
               </form>
               <form action={deleteGuest}>
                 <input type="hidden" name="id" value={guest.id} />
-                <button
-                  type="submit"
-                  className="rounded-full border border-danger-border px-3 py-1.5 text-xs font-medium text-danger"
-                >
+                <Button type="submit" variant="danger" size="sm">
                   Remove
-                </button>
+                </Button>
               </form>
             </div>
             <div className="text-xs text-subtle">
