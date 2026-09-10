@@ -17,6 +17,13 @@ export default async function AdminPage() {
     .select("id, token, name, attending, note")
     .order("created_at", { ascending: true });
 
+  const guestList = guests ?? [];
+  const respondedCount = guestList.filter((g) => g.attending !== null).length;
+  const attendingCount = guestList.filter((g) => g.attending === true).length;
+  const notAttendingCount = guestList.filter(
+    (g) => g.attending === false,
+  ).length;
+
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-6 py-16">
       <div className="flex items-center justify-between">
@@ -30,13 +37,40 @@ export default async function AdminPage() {
         </form>
       </div>
 
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-xl border border-border p-4">
+          <div className="text-2xl font-semibold text-foreground">
+            {guestList.length}
+          </div>
+          <div className="text-xs text-subtle">Guests</div>
+        </div>
+        <div className="rounded-xl border border-border p-4">
+          <div className="text-2xl font-semibold text-foreground">
+            {respondedCount}
+          </div>
+          <div className="text-xs text-subtle">Responded</div>
+        </div>
+        <div className="rounded-xl border border-border p-4">
+          <div className="text-2xl font-semibold text-foreground">
+            {attendingCount}
+          </div>
+          <div className="text-xs text-subtle">Attending</div>
+        </div>
+        <div className="rounded-xl border border-border p-4">
+          <div className="text-2xl font-semibold text-foreground">
+            {notAttendingCount}
+          </div>
+          <div className="text-xs text-subtle">Not attending</div>
+        </div>
+      </div>
+
       <AddGuestForm
         action={addGuest}
-        existingNames={guests?.map((guest) => guest.name) ?? []}
+        existingNames={guestList.map((guest) => guest.name)}
       />
 
       <ul className="flex flex-col divide-y divide-border">
-        {guests?.map((guest) => (
+        {guestList.map((guest) => (
           <li key={guest.id} className="flex flex-col gap-2 py-4">
             <div className="flex items-center gap-2">
               <form action={updateGuest} className="flex flex-1 gap-2">
