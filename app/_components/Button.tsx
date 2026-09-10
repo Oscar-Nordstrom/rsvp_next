@@ -27,7 +27,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   ref,
 ) {
   const classes = [
-    "transition-colors",
+    "transition-colors disabled:pointer-events-none disabled:opacity-50",
     variantClasses[variant],
     variant === "ghost" ? "text-sm" : sizeClasses[size],
     className,
