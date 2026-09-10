@@ -1,8 +1,10 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import Button from "@/app/_components/Button";
 import ConfirmButton from "@/app/_components/ConfirmButton";
+import CopyButton from "@/app/_components/CopyButton";
 import AddGuestForm from "./AddGuestForm";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
 
@@ -10,6 +12,13 @@ export default async function AdminPage() {
   if (!(await isAdmin())) {
     redirect("/admin/login");
   }
+
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol =
+    headersList.get("x-forwarded-proto") ??
+    (process.env.NODE_ENV === "development" ? "http" : "https");
+  const origin = `${protocol}://${host}`;
 
   const supabase = createSupabaseServerClient();
   const { data: guests } = await supabase
@@ -106,8 +115,11 @@ export default async function AdminPage() {
                   : "Not attending"}
               {guest.note ? ` — "${guest.note}"` : ""}
             </div>
-            <div className="truncate text-xs">
-              /rsvp/{guest.token}
+            <div className="flex items-center gap-2">
+              <div className="truncate text-xs text-subtle">
+                {origin}/rsvp/{guest.token}
+              </div>
+              <CopyButton value={`${origin}/rsvp/${guest.token}`} />
             </div>
           </li>
         ))}
