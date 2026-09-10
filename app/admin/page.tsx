@@ -3,6 +3,7 @@ import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import Button from "@/app/_components/Button";
 import ConfirmButton from "@/app/_components/ConfirmButton";
+import AddGuestForm from "./AddGuestForm";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
 
 export default async function AdminPage() {
@@ -29,16 +30,10 @@ export default async function AdminPage() {
         </form>
       </div>
 
-      <form action={addGuest} className="flex gap-3">
-        <input
-          type="text"
-          name="name"
-          placeholder="Guest name"
-          required
-          className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-sm"
-        />
-        <Button type="submit">Add guest</Button>
-      </form>
+      <AddGuestForm
+        action={addGuest}
+        existingNames={guests?.map((guest) => guest.name) ?? []}
+      />
 
       <ul className="flex flex-col divide-y divide-border">
         {guests?.map((guest) => (
