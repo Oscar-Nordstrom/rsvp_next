@@ -1,10 +1,10 @@
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-zinc-50 px-6 text-center dark:bg-black">
-      <h1 className="text-2xl font-semibold text-black dark:text-zinc-50">
+    <main className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-background px-6 text-center">
+      <h1 className="text-2xl font-semibold text-foreground">
         You&apos;re invited!
       </h1>
-      <p className="max-w-sm text-zinc-600 dark:text-zinc-400">
+      <p className="max-w-sm text-muted">
         Check your invite for your personal RSVP link.
       </p>
     </main>
