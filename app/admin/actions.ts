@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { destroyAdminSession, isAdmin } from "@/lib/admin/auth";
+import { generateGuestToken } from "@/lib/guests/token";
 
 async function requireAdmin() {
   if (!(await isAdmin())) {
@@ -20,15 +21,25 @@ export async function addGuest(formData: FormData) {
   }
 
   const supabase = createSupabaseServerClient();
-  const { error } = await supabase
-    .from("guests")
-    .insert({ name: name.trim() });
 
-  if (error) {
-    throw new Error(error.message);
+  // Token collisions are exceedingly unlikely at 32^5 combinations for a
+  // guest list this size, but retry a few times rather than fail outright.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { error } = await supabase
+      .from("guests")
+      .insert({ name: name.trim(), token: generateGuestToken() });
+
+    if (!error) {
+      revalidatePath("/admin");
+      return;
+    }
+
+    if (error.code !== "23505") {
+      throw new Error(error.message);
+    }
   }
 
-  revalidatePath("/admin");
+  throw new Error("Could not generate a unique invite code, please try again");
 }
 
 export async function updateGuest(formData: FormData) {

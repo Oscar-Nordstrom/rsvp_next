@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -12,13 +11,6 @@ export default async function AdminPage() {
   if (!(await isAdmin())) {
     redirect("/admin/login");
   }
-
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const protocol =
-    headersList.get("x-forwarded-proto") ??
-    (process.env.NODE_ENV === "development" ? "http" : "https");
-  const origin = `${protocol}://${host}`;
 
   const supabase = createSupabaseServerClient();
   const { data: guests } = await supabase
@@ -116,10 +108,10 @@ export default async function AdminPage() {
               {guest.note ? ` — "${guest.note}"` : ""}
             </div>
             <div className="flex items-center gap-2">
-              <div className="truncate text-xs text-subtle">
-                {origin}/rsvp/{guest.token}
-              </div>
-              <CopyButton value={`${origin}/rsvp/${guest.token}`} />
+              <span className="rounded-md border border-border bg-surface-hover px-2.5 py-1 font-mono text-base font-semibold tracking-widest text-foreground">
+                {guest.token}
+              </span>
+              <CopyButton value={guest.token} />
             </div>
           </li>
         ))}
