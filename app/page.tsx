@@ -15,8 +15,7 @@ export default async function Home({
           Oscar & Afrodite 2027
         </h1>
         <p className="mt-3 max-w-sm text-muted">
-          Använd din personliga länk för att komma åt din inbjudan, eller
-          ange din kod nedan.
+          Använd din personliga kod för svara på inbjudan och se mer information om bröllopet.
         </p>
       </div>
 
