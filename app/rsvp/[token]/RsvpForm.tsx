@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/app/_components/Button";
+import SubmitButton from "@/app/_components/SubmitButton";
 
 interface RsvpFormProps {
   token: string;
@@ -62,9 +63,7 @@ export default function RsvpForm({
         />
       </label>
 
-      <Button type="submit" disabled={attending === null}>
-        Skicka
-      </Button>
+      <SubmitButton disabled={attending === null}>Skicka</SubmitButton>
     </form>
   );
 }

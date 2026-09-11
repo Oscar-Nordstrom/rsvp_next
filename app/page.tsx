@@ -1,4 +1,4 @@
-import Button from "@/app/_components/Button";
+import SubmitButton from "@/app/_components/SubmitButton";
 import { findRsvp } from "./actions";
 
 export default async function Home({
@@ -28,7 +28,7 @@ export default async function Home({
           required
           className="rounded-md border border-border bg-transparent px-3 py-2 text-center text-sm"
         />
-        <Button type="submit">Hitta min inbjudan</Button>
+        <SubmitButton>Hitta min inbjudan</SubmitButton>
         {error && (
           <p className="text-sm text-danger">
             Vi kunde inte hitta någon inbjudan med den koden.

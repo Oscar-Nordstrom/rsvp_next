@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Button from "@/app/_components/Button";
+import SubmitButton from "@/app/_components/SubmitButton";
 import ConfirmDialog from "@/app/_components/ConfirmDialog";
 
 interface AddGuestFormProps {
@@ -50,7 +50,7 @@ export default function AddGuestForm({
           required
           className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-sm"
         />
-        <Button type="submit">Add guest</Button>
+        <SubmitButton>Add guest</SubmitButton>
       </form>
 
       <ConfirmDialog

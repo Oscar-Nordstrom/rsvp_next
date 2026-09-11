@@ -1,3 +1,4 @@
+import SubmitButton from "@/app/_components/SubmitButton";
 import { login } from "./actions";
 
 export default async function AdminLoginPage({
@@ -21,12 +22,7 @@ export default async function AdminLoginPage({
           autoFocus
           className="rounded-md border border-border bg-transparent px-3 py-2 text-sm"
         />
-        <button
-          type="submit"
-          className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-primary-hover"
-        >
-          Log in
-        </button>
+        <SubmitButton>Log in</SubmitButton>
         {error && <p className="text-sm text-danger">Incorrect password.</p>}
       </form>
     </main>

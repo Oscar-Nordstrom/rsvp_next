@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Button from "./Button";
 import ConfirmDialog from "./ConfirmDialog";
+import { Spinner } from "./SubmitButton";
 
 interface ConfirmButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger" | "ghost";
@@ -21,10 +23,12 @@ export default function ConfirmButton({
   confirmMessage,
   confirmLabel = "Confirm",
   children,
+  disabled,
   ...props
 }: ConfirmButtonProps) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const { pending } = useFormStatus();
 
   return (
     <>
@@ -33,10 +37,18 @@ export default function ConfirmButton({
         type="button"
         variant={variant}
         size={size}
+        disabled={disabled || pending}
         onClick={() => setOpen(true)}
         {...props}
       >
-        {children}
+        {pending ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <Spinner />
+            {children}
+          </span>
+        ) : (
+          children
+        )}
       </Button>
 
       <ConfirmDialog

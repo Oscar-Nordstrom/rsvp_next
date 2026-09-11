@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/admin/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import Button from "@/app/_components/Button";
 import ConfirmButton from "@/app/_components/ConfirmButton";
 import CopyButton from "@/app/_components/CopyButton";
+import SubmitButton from "@/app/_components/SubmitButton";
 import AddGuestForm from "./AddGuestForm";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
 
@@ -32,9 +32,7 @@ export default async function AdminPage() {
           Guests
         </h1>
         <form action={logout}>
-          <Button type="submit" variant="ghost">
-            Log out
-          </Button>
+          <SubmitButton variant="ghost">Log out</SubmitButton>
         </form>
       </div>
 
@@ -82,9 +80,9 @@ export default async function AdminPage() {
                   defaultValue={guest.name}
                   className="flex-1 rounded-md border border-border bg-transparent px-3 py-1.5 text-sm"
                 />
-                <Button type="submit" variant="secondary" size="sm">
+                <SubmitButton variant="secondary" size="sm">
                   Save
-                </Button>
+                </SubmitButton>
               </form>
               <form action={deleteGuest}>
                 <input type="hidden" name="id" value={guest.id} />
