@@ -69,6 +69,7 @@ export default function RsvpForm({
         <label className="flex flex-col gap-1 text-sm text-muted">
           Hur många av er ({partySize}) kommer?
           <Select
+            key={defaultAttendingCount}
             name="attendingCount"
             options={attendingCountOptions}
             defaultValue={Math.max(1, defaultAttendingCount)}
