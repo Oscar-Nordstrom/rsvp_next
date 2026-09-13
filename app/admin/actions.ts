@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { destroyAdminSession, isAdmin } from "@/lib/admin/auth";
 import { generateGuestToken } from "@/lib/guests/token";
+import { parseCountInput, MAX_PARTY_SIZE } from "@/lib/guests/party";
 
 async function requireAdmin() {
   if (!(await isAdmin())) {
@@ -20,14 +21,21 @@ export async function addGuest(formData: FormData) {
     throw new Error("Name is required");
   }
 
+  const partySize = parseCountInput(formData.get("partySize"), {
+    min: 1,
+    max: MAX_PARTY_SIZE,
+  });
+
   const supabase = createSupabaseServerClient();
 
   // Token collisions are exceedingly unlikely at 32^5 combinations for a
   // guest list this size, but retry a few times rather than fail outright.
   for (let attempt = 0; attempt < 5; attempt++) {
-    const { error } = await supabase
-      .from("guests")
-      .insert({ name: name.trim(), token: generateGuestToken() });
+    const { error } = await supabase.from("guests").insert({
+      name: name.trim(),
+      token: generateGuestToken(),
+      party_size: partySize,
+    });
 
     if (!error) {
       revalidatePath("/admin");
@@ -54,10 +62,28 @@ export async function updateGuest(formData: FormData) {
     throw new Error("Name is required");
   }
 
+  const partySize = parseCountInput(formData.get("partySize"), {
+    min: 1,
+    max: MAX_PARTY_SIZE,
+  });
+
   const supabase = createSupabaseServerClient();
+
+  // If the admin lowers the party size below what the guest already
+  // answered, bring their answer down to match so the row stays consistent.
+  const { data: current } = await supabase
+    .from("guests")
+    .select("attending_count")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase
     .from("guests")
-    .update({ name: name.trim() })
+    .update({
+      name: name.trim(),
+      party_size: partySize,
+      attending_count: Math.min(current?.attending_count ?? 0, partySize),
+    })
     .eq("id", id);
 
   if (error) {

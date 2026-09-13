@@ -3,6 +3,13 @@
 import { useRef, useState } from "react";
 import SubmitButton from "@/app/_components/SubmitButton";
 import ConfirmDialog from "@/app/_components/ConfirmDialog";
+import Select from "@/app/_components/Select";
+import { MAX_PARTY_SIZE } from "@/lib/guests/party";
+
+const partySizeOptions = Array.from(
+  { length: MAX_PARTY_SIZE },
+  (_, index) => index + 1,
+);
 
 interface AddGuestFormProps {
   action: (formData: FormData) => void;
@@ -49,6 +56,14 @@ export default function AddGuestForm({
           placeholder="Guest name"
           required
           className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-sm"
+        />
+        <Select
+          name="partySize"
+          options={partySizeOptions}
+          defaultValue={1}
+          aria-label="Party size"
+          title="Number of people this invite covers"
+          className="w-16"
         />
         <SubmitButton>Add guest</SubmitButton>
       </form>

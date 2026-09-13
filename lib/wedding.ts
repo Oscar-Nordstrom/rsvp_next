@@ -1,5 +1,7 @@
 export const weddingDetails = {
   datum: "Lördag, 5 Juni 2027",
+  rsvpDeadline: "2027-05-05",
+  rsvpDeadlineDisplay: "5 maj 2027",
   schema: [
     {
       plats: "Kyrkan",
@@ -23,3 +25,7 @@ export const weddingDetails = {
   ],
   tema: "Fri klädsel",
 };
+
+export function isRsvpLocked() {
+  return Date.now() > new Date(weddingDetails.rsvpDeadline).getTime();
+}

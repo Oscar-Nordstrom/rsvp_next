@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { weddingDetails } from "@/lib/wedding";
+import { weddingDetails, isRsvpLocked } from "@/lib/wedding";
+import { getGuestByToken } from "@/lib/guests/data";
 import { submitRsvp } from "./actions";
 import RsvpForm from "./RsvpForm";
 
@@ -10,19 +10,14 @@ export default async function RsvpPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const supabase = createSupabaseServerClient();
-
-  const { data: guest } = await supabase
-    .from("guests")
-    .select("name, attending, note")
-    .eq("token", token)
-    .single();
+  const guest = await getGuestByToken(token);
 
   if (!guest) {
     notFound();
   }
 
   const hasResponded = guest.attending !== null;
+  const locked = isRsvpLocked();
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
@@ -79,15 +74,28 @@ export default async function RsvpPage({
         token={token}
         defaultAttending={guest.attending}
         defaultNote={guest.note}
+        partySize={guest.party_size}
+        defaultAttendingCount={guest.attending_count}
+        locked={locked}
         action={submitRsvp}
       />
 
       {hasResponded && (
         <p className="text-sm text-subtle">
           Svar:{" "}
-          {guest.attending ? "Kommer ✅" : "Kommer inte"}
+          {guest.attending
+            ? `Kommer ✅ (${guest.attending_count}/${guest.party_size})`
+            : "Kommer inte"}
           <br />
-          Du kan ändra ditt svar genom att skicka in formuläret igen.
+          {locked
+            ? "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar."
+            : `Du kan ändra ditt svar fram till ${weddingDetails.rsvpDeadlineDisplay} genom att skicka in formuläret igen.`}
+        </p>
+      )}
+
+      {!hasResponded && locked && (
+        <p className="text-sm text-subtle">
+          Svarsperioden har stängt. Kontakta oss direkt om du behöver svara.
         </p>
       )}
     </main>

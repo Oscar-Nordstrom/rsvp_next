@@ -4,8 +4,15 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ConfirmButton from "@/app/_components/ConfirmButton";
 import CopyButton from "@/app/_components/CopyButton";
 import SubmitButton from "@/app/_components/SubmitButton";
+import Select from "@/app/_components/Select";
 import AddGuestForm from "./AddGuestForm";
 import { addGuest, deleteGuest, logout, updateGuest } from "./actions";
+import { MAX_PARTY_SIZE } from "@/lib/guests/party";
+
+const partySizeOptions = Array.from(
+  { length: MAX_PARTY_SIZE },
+  (_, index) => index + 1,
+);
 
 export default async function AdminPage() {
   if (!(await isAdmin())) {
@@ -15,15 +22,37 @@ export default async function AdminPage() {
   const supabase = createSupabaseServerClient();
   const { data: guests } = await supabase
     .from("guests")
-    .select("id, token, name, attending, note")
+    .select("id, token, name, attending, note, party_size, attending_count")
     .order("created_at", { ascending: true });
 
   const guestList = guests ?? [];
+  const totalGuests = guestList.reduce((sum, g) => sum + g.party_size, 0);
   const respondedCount = guestList.filter((g) => g.attending !== null).length;
-  const attendingCount = guestList.filter((g) => g.attending === true).length;
-  const notAttendingCount = guestList.filter(
-    (g) => g.attending === false,
-  ).length;
+  const attendingCount = guestList
+    .filter((g) => g.attending === true)
+    .reduce((sum, g) => sum + g.attending_count, 0);
+  const notAttendingCount = guestList.reduce((sum, g) => {
+    if (g.attending === false) {
+      return sum + g.party_size;
+    }
+    if (g.attending === true) {
+      return sum + (g.party_size - g.attending_count);
+    }
+    return sum;
+  }, 0);
+
+  function attendanceStatus(guest: (typeof guestList)[number]) {
+    if (guest.attending === null) {
+      return "No response yet";
+    }
+    if (guest.attending === false) {
+      return "Not attending ❌";
+    }
+    if (guest.attending_count >= guest.party_size) {
+      return `Attending ✅ (${guest.attending_count}/${guest.party_size})`;
+    }
+    return `Some attending ⚠️ (${guest.attending_count}/${guest.party_size})`;
+  }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-6 py-16">
@@ -36,16 +65,22 @@ export default async function AdminPage() {
         </form>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <div className="rounded-xl border border-border p-4">
           <div className="text-2xl font-semibold text-foreground">
             {guestList.length}
           </div>
-          <div className="text-xs text-subtle">Guests</div>
+          <div className="text-xs text-subtle">Invites</div>
         </div>
         <div className="rounded-xl border border-border p-4">
           <div className="text-2xl font-semibold text-foreground">
-            {respondedCount}
+            {totalGuests}
+          </div>
+          <div className="text-xs text-subtle">Total guests</div>
+        </div>
+        <div className="rounded-xl border border-border p-4">
+          <div className="text-2xl font-semibold text-foreground">
+            {respondedCount}/{guestList.length}
           </div>
           <div className="text-xs text-subtle">Responded</div>
         </div>
@@ -80,6 +115,15 @@ export default async function AdminPage() {
                   defaultValue={guest.name}
                   className="flex-1 rounded-md border border-border bg-transparent px-3 py-1.5 text-sm"
                 />
+                <Select
+                  name="partySize"
+                  options={partySizeOptions}
+                  defaultValue={guest.party_size}
+                  aria-label="Party size"
+                  title="Number of people this invite covers"
+                  compact
+                  className="w-14"
+                />
                 <SubmitButton variant="secondary" size="sm">
                   Save
                 </SubmitButton>
@@ -98,11 +142,10 @@ export default async function AdminPage() {
               </form>
             </div>
             <div className="text-xs text-subtle">
-              {guest.attending === null
-                ? "No response yet"
-                : guest.attending
-                  ? "Attending ✅"
-                  : "Not attending"}
+              {attendanceStatus(guest)}
+              {guest.attending === null &&
+                guest.party_size > 1 &&
+                ` · Party of ${guest.party_size}`}
               {guest.note ? ` — "${guest.note}"` : ""}
             </div>
             <div className="flex items-center gap-2">
