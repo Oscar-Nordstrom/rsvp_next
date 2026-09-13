@@ -19,6 +19,12 @@ export default async function RsvpPage({
   const hasResponded = guest.attending !== null;
   const locked = isRsvpLocked();
 
+  const svarText = !guest.attending
+    ? "Kommer inte ❌"
+    : guest.attending_count >= guest.party_size
+      ? `Kommer ✅ (${guest.attending_count}/${guest.party_size})`
+      : `Kommer ⚠️ (${guest.attending_count}/${guest.party_size})`;
+
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
       <div>
@@ -81,16 +87,16 @@ export default async function RsvpPage({
       />
 
       {hasResponded && (
-        <p className="text-sm text-subtle">
-          Svar:{" "}
-          {guest.attending
-            ? `Kommer ✅ (${guest.attending_count}/${guest.party_size})`
-            : "Kommer inte"}
-          <br />
-          {locked
-            ? "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar."
-            : `Du kan ändra ditt svar fram till ${weddingDetails.rsvpDeadlineDisplay} genom att skicka in formuläret igen.`}
-        </p>
+        <div className="rounded-xl border border-border bg-surface-hover p-4">
+          <p className="text-lg font-semibold text-foreground">
+            Svar: {svarText}
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            {locked
+              ? "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar."
+              : `Du kan ändra ditt svar fram till ${weddingDetails.rsvpDeadlineDisplay} genom att skicka in formuläret igen.`}
+          </p>
+        </div>
       )}
 
       {!hasResponded && locked && (
