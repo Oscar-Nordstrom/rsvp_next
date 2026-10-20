@@ -37,14 +37,18 @@ export default async function RsvpPage({
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 text-sm">
-        <div>
-          <div className="font-medium text-foreground">Datum</div>
-          <div className="text-muted">{weddingDetails.datum}</div>
-        </div>
-
-        <InfoButton label="Visa schema" title="Schema" className="self-start">
+      <div className="flex flex-wrap gap-3 text-sm">
+        <InfoButton label="Detaljer & schema" title="Detaljer & schema">
+          <div>
+            <div className="font-medium text-foreground">Datum</div>
+            <div className="text-muted">{weddingDetails.datum}</div>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">Klädkod</div>
+            <div className="text-muted">{weddingDetails.tema}</div>
+          </div>
           <div className="flex flex-col gap-3">
+            <div className="font-medium text-foreground">Schema</div>
             {weddingDetails.schema.map((stop, index) => (
               <div key={index}>
                 <div className="font-medium text-foreground">
@@ -68,11 +72,6 @@ export default async function RsvpPage({
             ))}
           </div>
         </InfoButton>
-
-        <div>
-          <div className="font-medium text-foreground">Klädkod</div>
-          <div className="text-muted">{weddingDetails.tema}</div>
-        </div>
       </div>
 
       <RsvpForm

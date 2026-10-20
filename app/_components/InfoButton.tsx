@@ -12,6 +12,9 @@ interface InfoButtonProps {
   className?: string;
 }
 
+// A soft, pill-shaped trigger with a leading "info" badge — visually
+// distinct from the site's outlined secondary buttons (Save/Remove/etc.)
+// so it reads as "opens more details" rather than "performs an action".
 export default function InfoButton({
   label,
   title,
@@ -25,9 +28,15 @@ export default function InfoButton({
       <Button
         type="button"
         variant="secondary"
-        className={className}
+        className={`inline-flex items-center gap-2 bg-surface-hover ${className ?? ""}`}
         onClick={() => setOpen(true)}
       >
+        <span
+          aria-hidden
+          className="flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] font-semibold text-background"
+        >
+          i
+        </span>
         {label}
       </Button>
 

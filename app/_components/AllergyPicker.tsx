@@ -24,13 +24,12 @@ export default function AllergyPicker({
 
   return (
     <div className="flex flex-col gap-2">
-      <h1>Allergier/Matpreferenser</h1>
-      <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+      <div className="text-sm font-medium text-foreground">
+        Allergier/Matpreferenser
+      </div>
+      <div className="flex flex-wrap gap-2">
         {ALLERGY_TAGS.map((tag) => (
-          <label
-            key={tag}
-            className="flex items-center gap-1.5 text-sm text-muted"
-          >
+          <label key={tag} className="group inline-flex cursor-pointer">
             <input
               type="checkbox"
               name={name}
@@ -42,9 +41,18 @@ export default function AllergyPicker({
                   ? (e) => setOtherChecked(e.target.checked)
                   : undefined
               }
-              className="h-4 w-4 rounded border-border"
+              className="peer sr-only"
             />
-            {tag}
+            <span
+              className="rounded-full border border-border px-3 py-1.5 text-sm text-muted
+                transition-colors group-hover:border-transparent group-hover:bg-surface-hover
+                peer-checked:border-transparent peer-checked:bg-foreground peer-checked:text-background
+                peer-checked:group-hover:bg-primary-hover
+                peer-disabled:pointer-events-none peer-disabled:opacity-50
+                peer-focus-visible:ring-2 peer-focus-visible:ring-border peer-focus-visible:ring-offset-2"
+            >
+              {tag}
+            </span>
           </label>
         ))}
       </div>
@@ -56,6 +64,7 @@ export default function AllergyPicker({
           placeholder="Beskriv allergin..."
           disabled={disabled}
           maxLength={200}
+          autoFocus
           className="rounded-md border border-border bg-transparent px-3 py-1.5 text-sm"
         />
       )}
