@@ -11,9 +11,14 @@ create table if not exists parties (
   id uuid primary key default gen_random_uuid(),
   token text not null unique,
   note text,
+  transport boolean,
   responded_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+-- Run this alone if `parties` already exists in your database (e.g. you ran
+-- this script before `transport` was added) — it won't touch existing rows.
+alter table parties add column if not exists transport boolean;
 
 create table if not exists guests (
   id uuid primary key default gen_random_uuid(),

@@ -23,7 +23,7 @@ export default async function AdminPage() {
   const { data } = await supabase
     .from("parties")
     .select(
-      "id, token, note, responded_at, guests(id, name, attending, allergy_tags, allergy_note)",
+      "id, token, note, transport, responded_at, guests(id, name, attending, allergy_tags, allergy_note)",
     )
     .order("created_at", { ascending: true });
 

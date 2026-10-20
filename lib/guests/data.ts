@@ -13,7 +13,7 @@ export const getPartyByToken = cache(async (token: string) => {
   const { data: party } = await supabase
     .from("parties")
     .select(
-      "id, token, note, responded_at, guests(id, name, attending, allergy_tags, allergy_note)",
+      "id, token, note, transport, responded_at, guests(id, name, attending, allergy_tags, allergy_note)",
     )
     .eq("token", token)
     .single();

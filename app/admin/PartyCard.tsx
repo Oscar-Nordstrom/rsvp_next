@@ -53,6 +53,12 @@ export default function PartyCard({
         <p className="text-xs text-subtle">Message: &quot;{party.note}&quot;</p>
       )}
 
+      {party.transport !== null && (
+        <p className="text-xs text-subtle">
+          Transport: {party.transport ? "Yes ✅" : "No ❌"}
+        </p>
+      )}
+
       <ul className="flex flex-col gap-2">
         {party.guests.map((guest) => (
           <li

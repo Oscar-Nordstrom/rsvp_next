@@ -16,6 +16,7 @@ export async function submitRsvp(formData: FormData) {
 
   const token = formData.get("token");
   const note = formData.get("note");
+  const transportRaw = formData.get("transport");
   const guestIds = formData.get("guestIds");
 
   if (typeof token !== "string" || !token) {
@@ -92,6 +93,8 @@ export async function submitRsvp(formData: FormData) {
     .from("parties")
     .update({
       note: typeof note === "string" && note.trim() ? note.trim() : null,
+      transport:
+        transportRaw === "true" ? true : transportRaw === "false" ? false : null,
       responded_at: new Date().toISOString(),
     })
     .eq("id", party.id);

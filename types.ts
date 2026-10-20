@@ -23,6 +23,7 @@ export interface Party {
   id: string;
   token: string;
   note: string | null;
+  transport: boolean | null;
   responded_at: string | null;
   guests: Guest[];
 }

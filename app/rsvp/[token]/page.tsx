@@ -78,6 +78,7 @@ export default async function RsvpPage({
         token={token}
         guests={party.guests}
         defaultNote={party.note}
+        defaultTransport={party.transport}
         locked={locked}
         action={submitRsvp}
       />
@@ -92,6 +93,11 @@ export default async function RsvpPage({
               </li>
             ))}
           </ul>
+          {party.transport !== null && (
+            <p className="mt-1 text-sm text-muted">
+              Transport: {party.transport ? "Ja" : "Nej"}
+            </p>
+          )}
           <p className="mt-2 text-sm text-muted">
             {locked
               ? "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar."

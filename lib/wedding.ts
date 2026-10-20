@@ -5,15 +5,15 @@ export const weddingDetails = {
   schema: [
     {
       plats: "Kyrkan",
-      beskrivning: "Vigseln äger rum i St.Giorgios kyrka.",
-      tid: "15:00",
-      adress: "Birger Jarlsgatan 92, 114 20 Stockholm",
-      länk: "https://maps.app.goo.gl/JjPF8fHUKSZCfCDQ8",
+      beskrivning: "Vigseln äger rum i Sollentuna kyrka.",
+      tid: "16:00",
+      adress: "Kyrkvägen 2, 192 72 Sollentuna",
+      länk: "https://maps.app.goo.gl/FLwZ5ib6pv8jV2HW9",
     },
     {
       plats: "Fest",
-      beskrivning: "Därefter fortsätter firandet med middag, fest på Steninge bruk",
-      tid: "17:00",
+      beskrivning: "Därefter fortsätter firandet med mingel, middag, och fest på Steninge bruk",
+      tid: "17:30",
       adress: "Steninge slottsväg 141, Marsta, SE 195 91",
       länk: "https://maps.app.goo.gl/tmmLui74PZrR5wTM6",
     },
