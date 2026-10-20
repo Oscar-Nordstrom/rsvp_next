@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import Button from "./Button";
+import Dialog from "./Dialog";
 
 interface InfoButtonProps {
   label: ReactNode;
@@ -17,7 +18,7 @@ export default function InfoButton({
   children,
   className,
 }: InfoButtonProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -25,21 +26,12 @@ export default function InfoButton({
         type="button"
         variant="secondary"
         className={className}
-        onClick={() => dialogRef.current?.showModal()}
+        onClick={() => setOpen(true)}
       >
         {label}
       </Button>
 
-      <dialog
-        ref={dialogRef}
-        onClick={(e) => {
-          if (e.target === dialogRef.current) {
-            dialogRef.current?.close();
-          }
-        }}
-        className="m-auto w-full max-w-sm rounded-2xl border border-border bg-background p-6 text-foreground backdrop:bg-black/40"
-      >
-        <h2 className="text-base font-semibold">{title}</h2>
+      <Dialog open={open} onOpenChange={setOpen} title={title}>
         <div className="mt-2 flex flex-col gap-2 text-sm text-muted">
           {children}
         </div>
@@ -48,12 +40,12 @@ export default function InfoButton({
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => dialogRef.current?.close()}
+            onClick={() => setOpen(false)}
           >
             Stäng
           </Button>
         </div>
-      </dialog>
+      </Dialog>
     </>
   );
 }

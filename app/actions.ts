@@ -12,15 +12,15 @@ export async function findRsvp(formData: FormData) {
   }
 
   const supabase = createSupabaseServerClient();
-  const { data: guest } = await supabase
-    .from("guests")
+  const { data: party } = await supabase
+    .from("parties")
     .select("token")
     .ilike("token", trimmed)
     .maybeSingle();
 
-  if (!guest) {
+  if (!party) {
     redirect("/?error=1");
   }
 
-  redirect(`/rsvp/${guest.token}`);
+  redirect(`/rsvp/${party.token}`);
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Button from "./Button";
+import Dialog from "./Dialog";
 
 type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 
@@ -26,37 +26,15 @@ export default function ConfirmDialog({
   confirmVariant = "danger",
   onConfirm,
 }: ConfirmDialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) {
-      dialog.showModal();
-    } else if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
   return (
-    <dialog
-      ref={dialogRef}
-      onClose={() => onOpenChange(false)}
-      onClick={(e) => {
-        if (e.target === dialogRef.current) {
-          dialogRef.current?.close();
-        }
-      }}
-      className="m-auto w-full max-w-sm rounded-2xl border border-border bg-background p-6 text-foreground backdrop:bg-black/40"
-    >
-      <h2 className="text-base font-semibold">{title}</h2>
+    <Dialog open={open} onOpenChange={onOpenChange} title={title}>
       {message && <p className="mt-1 text-sm text-muted">{message}</p>}
       <div className="mt-5 flex justify-end gap-3">
         <Button
           type="button"
           variant="secondary"
           size="sm"
-          onClick={() => dialogRef.current?.close()}
+          onClick={() => onOpenChange(false)}
         >
           {cancelLabel}
         </Button>
@@ -66,12 +44,12 @@ export default function ConfirmDialog({
           size="sm"
           onClick={() => {
             onConfirm();
-            dialogRef.current?.close();
+            onOpenChange(false);
           }}
         >
           {confirmLabel}
         </Button>
       </div>
-    </dialog>
+    </Dialog>
   );
 }

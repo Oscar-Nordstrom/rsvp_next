@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { destroyAdminSession, isAdmin } from "@/lib/admin/auth";
 import { generateGuestToken } from "@/lib/guests/token";
-import { parseCountInput, MAX_PARTY_SIZE } from "@/lib/guests/party";
 
 async function requireAdmin() {
   if (!(await isAdmin())) {
@@ -13,36 +12,44 @@ async function requireAdmin() {
   }
 }
 
-export async function addGuest(formData: FormData) {
+export async function addParty(formData: FormData) {
   await requireAdmin();
 
-  const name = formData.get("name");
-  if (typeof name !== "string" || !name.trim()) {
-    throw new Error("Name is required");
-  }
+  const names = formData
+    .getAll("names")
+    .filter((value): value is string => typeof value === "string")
+    .map((name) => name.trim())
+    .filter(Boolean);
 
-  const partySize = parseCountInput(formData.get("partySize"), {
-    min: 1,
-    max: MAX_PARTY_SIZE,
-  });
+  if (names.length === 0) {
+    throw new Error("At least one guest name is required");
+  }
 
   const supabase = createSupabaseServerClient();
 
   // Token collisions are exceedingly unlikely at 32^5 combinations for a
   // guest list this size, but retry a few times rather than fail outright.
   for (let attempt = 0; attempt < 5; attempt++) {
-    const { error } = await supabase.from("guests").insert({
-      name: name.trim(),
-      token: generateGuestToken(),
-      party_size: partySize,
-    });
+    const { data: party, error } = await supabase
+      .from("parties")
+      .insert({ token: generateGuestToken() })
+      .select("id")
+      .single();
 
-    if (!error) {
+    if (!error && party) {
+      const { error: guestsError } = await supabase.from("guests").insert(
+        names.map((name) => ({ party_id: party.id, name })),
+      );
+
+      if (guestsError) {
+        throw new Error(guestsError.message);
+      }
+
       revalidatePath("/admin");
       return;
     }
 
-    if (error.code !== "23505") {
+    if (error && error.code !== "23505") {
       throw new Error(error.message);
     }
   }
@@ -50,7 +57,7 @@ export async function addGuest(formData: FormData) {
   throw new Error("Could not generate a unique invite code, please try again");
 }
 
-export async function updateGuest(formData: FormData) {
+export async function updateGuestName(formData: FormData) {
   await requireAdmin();
 
   const id = formData.get("id");
@@ -62,29 +69,35 @@ export async function updateGuest(formData: FormData) {
     throw new Error("Name is required");
   }
 
-  const partySize = parseCountInput(formData.get("partySize"), {
-    min: 1,
-    max: MAX_PARTY_SIZE,
-  });
-
   const supabase = createSupabaseServerClient();
-
-  // If the admin lowers the party size below what the guest already
-  // answered, bring their answer down to match so the row stays consistent.
-  const { data: current } = await supabase
-    .from("guests")
-    .select("attending_count")
-    .eq("id", id)
-    .single();
-
   const { error } = await supabase
     .from("guests")
-    .update({
-      name: name.trim(),
-      party_size: partySize,
-      attending_count: Math.min(current?.attending_count ?? 0, partySize),
-    })
+    .update({ name: name.trim() })
     .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/admin");
+}
+
+export async function addGuestToParty(formData: FormData) {
+  await requireAdmin();
+
+  const partyId = formData.get("partyId");
+  const name = formData.get("name");
+  if (typeof partyId !== "string" || !partyId) {
+    throw new Error("Missing party id");
+  }
+  if (typeof name !== "string" || !name.trim()) {
+    throw new Error("Name is required");
+  }
+
+  const supabase = createSupabaseServerClient();
+  const { error } = await supabase
+    .from("guests")
+    .insert({ party_id: partyId, name: name.trim() });
 
   if (error) {
     throw new Error(error.message);
@@ -103,6 +116,24 @@ export async function deleteGuest(formData: FormData) {
 
   const supabase = createSupabaseServerClient();
   const { error } = await supabase.from("guests").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/admin");
+}
+
+export async function deleteParty(formData: FormData) {
+  await requireAdmin();
+
+  const id = formData.get("id");
+  if (typeof id !== "string" || !id) {
+    throw new Error("Missing party id");
+  }
+
+  const supabase = createSupabaseServerClient();
+  const { error } = await supabase.from("parties").delete().eq("id", id);
 
   if (error) {
     throw new Error(error.message);
