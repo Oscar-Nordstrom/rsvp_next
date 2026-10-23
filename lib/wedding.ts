@@ -1,7 +1,14 @@
+export const Deadline = new Date("2027-05-05"); 
+export const DeadlineString = Deadline.toLocaleDateString("sv-SE", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
 export const weddingDetails = {
   datum: "Lördag, 5 Juni 2027",
-  rsvpDeadline: "2027-05-05",
-  rsvpDeadlineDisplay: "5 maj 2027",
+  rsvpDeadlineDisplay: DeadlineString,
   schema: [
     {
       plats: "Kyrkan",
@@ -26,6 +33,57 @@ export const weddingDetails = {
   tema: "Fri klädsel",
 };
 
+
+export const DeadlineSentence = `Sista svarsdatum är ${DeadlineString}.`;
+
+export const text = {
+  metadata: {
+    title: "RSVP",
+    description: "Let us know if you can make it!",
+  },
+  home: {
+    title: "Oscar & Afrodite 2027",
+    intro:
+      "Använd din personliga kod för svara på inbjudan och se mer information om bröllopet.",
+    codePlaceholder: "Din kod",
+    submit: "Hitta min inbjudan",
+    notFound: "Vi kunde inte hitta någon inbjudan med den koden.",
+  },
+  rsvp: {
+    greeting: (name: string) => `Hej ${name}!`,
+    welcome: "Välkommen till vår bröllopsfest! Vi ser fram emot att fira med dig.",
+    detailsButton: "Detaljer & schema",
+    detailsTitle: "Detaljer & schema",
+    dateLabel: "Datum",
+    dressCodeLabel: "Klädkod",
+    scheduleLabel: "Schema",
+    showOnMap: "Visa på karta",
+    close: "Stäng",
+    summaryTitle: "Svar:",
+    noAnswer: "Inget svar än",
+    attending: "Kommer ✅",
+    notAttending: "Kommer inte ❌",
+    transportLabel: "Transport",
+    yes: "Ja",
+    no: "Nej",
+    canChangeAnswer: `Du kan ändra ditt svar fram till ${DeadlineString} genom att skicka in formuläret igen.`,
+    lockedAfterAnswer:
+      "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar.",
+    lockedNoAnswer:
+      "Svarsperioden har stängt. Kontakta oss direkt om du behöver svara.",
+  },
+  form: {
+    attendingYes: "Ja, kommer!",
+    attendingNo: "Kan inte komma",
+    allergiesLabel: "Allergier/Avvikelser",
+    allergyOtherPlaceholder: "Beskriv allergin...",
+    transportQuestion: "Önskar ni transport från kyrkan till festlokalen?",
+    noteLabel: "Meddelande (frånvarande gäster, övrigt etc.)",
+    notePlaceholder: "Skriv ett meddelande till oss...",
+    submit: "Skicka",
+  },
+};
+
 export function isRsvpLocked() {
-  return Date.now() > new Date(weddingDetails.rsvpDeadline).getTime();
+  return Date.now() > new Date(Deadline).getTime();
 }

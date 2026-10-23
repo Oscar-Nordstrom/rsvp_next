@@ -4,7 +4,8 @@ import { useState } from "react";
 import SubmitButton from "@/app/_components/SubmitButton";
 import Button from "@/app/_components/Button";
 import GuestRsvpField from "@/app/_components/GuestRsvpField";
-import type { Guest } from "@/types";
+import type { Guest } from "@/lib/types";
+import { text } from "@/lib/wedding";
 
 interface RsvpFormProps {
   token: string;
@@ -69,7 +70,7 @@ export default function RsvpForm({
         />
 
         <div className="font-medium text-foreground">
-          Önskar ni transport från kyrkan till festlokalen?
+          {text.form.transportQuestion}
         </div>
 
         <div className="flex gap-3">
@@ -82,7 +83,7 @@ export default function RsvpForm({
             size="sm"
             className="flex-1"
           >
-            Ja
+            {text.rsvp.yes}
           </Button>
           <Button
             type="button"
@@ -93,13 +94,13 @@ export default function RsvpForm({
             size="sm"
             className="flex-1"
           >
-            Nej
+            {text.rsvp.no}
           </Button>
         </div>
       </div>
 
       <label className="flex flex-col gap-1 text-sm text-muted">
-        Meddelande (frånvarande gäster, övrigt etc.)
+        {text.form.noteLabel}
         <textarea
           name="note"
           defaultValue={defaultNote ?? ""}
@@ -107,7 +108,7 @@ export default function RsvpForm({
           rows={3}
           maxLength={500}
           disabled={locked}
-          placeholder="Skriv ett meddelande till oss..."
+          placeholder={text.form.notePlaceholder}
           className="rounded-md border border-border bg-transparent px-3 py-2 text-sm"
         />
         <span className="self-end text-xs text-subtle">
@@ -116,7 +117,7 @@ export default function RsvpForm({
       </label>
 
       <SubmitButton disabled={locked || !everyoneAnswered}>
-        Skicka
+        {text.form.submit}
       </SubmitButton>
     </form>
   );

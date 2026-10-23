@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Party } from "@/types";
+import type { Party } from "@/lib/types";
 
 // Cached per-request: the Supabase client isn't the built-in fetch(), so
 // Next won't dedupe repeat reads on its own. Without this, the party row

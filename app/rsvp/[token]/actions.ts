@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isRsvpLocked } from "@/lib/wedding";
-import { ALLERGY_TAGS, type AllergyTag } from "@/types";
+import { ALLERGY_TAGS, type AllergyTag } from "@/lib/types";
 
 function isAllergyTag(value: string): value is AllergyTag {
   return (ALLERGY_TAGS as readonly string[]).includes(value);

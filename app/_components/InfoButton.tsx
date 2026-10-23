@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import Button from "./Button";
 import Dialog from "./Dialog";
+import { text } from "@/lib/wedding";
 
 interface InfoButtonProps {
   label: ReactNode;
@@ -51,7 +52,7 @@ export default function InfoButton({
             size="sm"
             onClick={() => setOpen(false)}
           >
-            Stäng
+            {text.rsvp.close}
           </Button>
         </div>
       </Dialog>

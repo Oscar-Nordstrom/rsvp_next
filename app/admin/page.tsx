@@ -12,7 +12,7 @@ import {
   logout,
   updateGuestName,
 } from "./actions";
-import type { Party } from "@/types";
+import type { Party } from "@/lib/types";
 
 export default async function AdminPage() {
   if (!(await isAdmin())) {

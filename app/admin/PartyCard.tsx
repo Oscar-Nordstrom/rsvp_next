@@ -4,7 +4,7 @@ import { useState } from "react";
 import SubmitButton from "@/app/_components/SubmitButton";
 import ConfirmButton from "@/app/_components/ConfirmButton";
 import CopyButton from "@/app/_components/CopyButton";
-import type { Party } from "@/types";
+import type { Party } from "@/lib/types";
 
 interface PartyCardProps {
   party: Party;

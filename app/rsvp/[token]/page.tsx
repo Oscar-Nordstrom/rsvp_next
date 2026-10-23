@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { weddingDetails, isRsvpLocked } from "@/lib/wedding";
+import { weddingDetails, isRsvpLocked, DeadlineSentence, text } from "@/lib/wedding";
 import { getPartyByToken } from "@/lib/guests/data";
 import { submitRsvp } from "./actions";
 import RsvpForm from "./RsvpForm";
@@ -22,33 +22,36 @@ export default async function RsvpPage({
   const firstName = party.guests[0]?.name ?? "";
 
   function guestStatus(attending: boolean | null) {
-    if (attending === null) return "Inget svar än";
-    return attending ? "Kommer ✅" : "Kommer inte ❌";
+    if (attending === null) return text.rsvp.noAnswer;
+    return attending ? text.rsvp.attending : text.rsvp.notAttending;
   }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
       <div>
         <h1 className="font-display text-3xl font-semibold text-foreground">
-          Hej {firstName}!
+          {text.rsvp.greeting(firstName)}
         </h1>
         <p className="mt-1 text-muted">
-          Välkommen till vår bröllopsfest! Vi ser fram emot att fira med dig.
+          {text.rsvp.welcome}
+        </p>
+        <p className="mt-1 text-muted">
+          {DeadlineSentence}
         </p>
       </div>
 
       <div className="flex flex-wrap gap-3 text-sm">
-        <InfoButton label="Detaljer & schema" title="Detaljer & schema">
+        <InfoButton label={text.rsvp.detailsButton} title={text.rsvp.detailsTitle}>
           <div>
-            <div className="font-medium text-foreground">Datum</div>
+            <div className="font-medium text-foreground">{text.rsvp.dateLabel}</div>
             <div className="text-muted">{weddingDetails.datum}</div>
           </div>
           <div>
-            <div className="font-medium text-foreground">Klädkod</div>
+            <div className="font-medium text-foreground">{text.rsvp.dressCodeLabel}</div>
             <div className="text-muted">{weddingDetails.tema}</div>
           </div>
           <div className="flex flex-col gap-3">
-            <div className="font-medium text-foreground">Schema</div>
+            <div className="font-medium text-foreground">{text.rsvp.scheduleLabel}</div>
             {weddingDetails.schema.map((stop, index) => (
               <div key={index}>
                 <div className="font-medium text-foreground">
@@ -65,7 +68,7 @@ export default async function RsvpPage({
                     rel="noopener noreferrer"
                     className="text-foreground underline underline-offset-2"
                   >
-                    Visa på karta
+                    {text.rsvp.showOnMap}
                   </a>
                 )}
               </div>
@@ -85,7 +88,7 @@ export default async function RsvpPage({
 
       {hasResponded && (
         <div className="rounded-xl border border-border bg-surface-hover p-4">
-          <p className="text-lg font-semibold text-foreground">Svar:</p>
+          <p className="text-lg font-semibold text-foreground">{text.rsvp.summaryTitle}</p>
           <ul className="mt-1 flex flex-col gap-0.5">
             {party.guests.map((guest) => (
               <li key={guest.id} className="text-sm text-muted">
@@ -95,20 +98,20 @@ export default async function RsvpPage({
           </ul>
           {party.transport !== null && (
             <p className="mt-1 text-sm text-muted">
-              Transport: {party.transport ? "Ja" : "Nej"}
+              {text.rsvp.transportLabel}: {party.transport ? text.rsvp.yes : text.rsvp.no}
             </p>
           )}
           <p className="mt-2 text-sm text-muted">
             {locked
-              ? "Svarsperioden har stängt. Kontakta oss direkt om du behöver ändra ditt svar."
-              : `Du kan ändra ditt svar fram till ${weddingDetails.rsvpDeadlineDisplay} genom att skicka in formuläret igen.`}
+              ? text.rsvp.lockedAfterAnswer
+              : text.rsvp.canChangeAnswer}
           </p>
         </div>
       )}
 
       {!hasResponded && locked && (
         <p className="text-sm text-subtle">
-          Svarsperioden har stängt. Kontakta oss direkt om du behöver svara.
+          {text.rsvp.lockedNoAnswer}
         </p>
       )}
     </main>

@@ -4,10 +4,11 @@ export const ALLERGY_TAGS = [
   "Laktos",
   "Gluten",
   "Skaldjur",
-  "Vegiterian",
+  "Vegeterian",
   "Vegan",
   ALLERGY_OTHER_TAG,
 ] as const;
+
 
 export type AllergyTag = (typeof ALLERGY_TAGS)[number];
 

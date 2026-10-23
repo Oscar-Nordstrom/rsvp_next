@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ALLERGY_TAGS, type AllergyTag, ALLERGY_OTHER_TAG } from "@/types";
+import { ALLERGY_TAGS, type AllergyTag, ALLERGY_OTHER_TAG } from "@/lib/types";
+import { text } from "@/lib/wedding";
 
 interface AllergyPickerProps {
   name: string;
@@ -25,7 +26,7 @@ export default function AllergyPicker({
   return (
     <div className="flex flex-col gap-2">
       <div className="text-sm font-medium text-foreground">
-        Allergier/Matpreferenser
+        {text.form.allergiesLabel}
       </div>
       <div className="flex flex-wrap gap-2">
         {ALLERGY_TAGS.map((tag) => (
@@ -61,7 +62,7 @@ export default function AllergyPicker({
           type="text"
           name={otherFieldName}
           defaultValue={defaultOtherValue ?? ""}
-          placeholder="Beskriv allergin..."
+          placeholder={text.form.allergyOtherPlaceholder}
           disabled={disabled}
           maxLength={200}
           autoFocus

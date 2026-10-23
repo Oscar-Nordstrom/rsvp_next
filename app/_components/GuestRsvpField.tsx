@@ -2,7 +2,8 @@
 
 import Button from "./Button";
 import AllergyPicker from "./AllergyPicker";
-import type { Guest } from "@/types";
+import type { Guest } from "@/lib/types";
+import { text } from "@/lib/wedding";
 
 interface GuestRsvpFieldProps {
   guest: Guest;
@@ -37,7 +38,7 @@ export default function GuestRsvpField({
           size="sm"
           className="flex-1"
         >
-          Ja, kommer!
+          {text.form.attendingYes}
         </Button>
         <Button
           type="button"
@@ -48,7 +49,7 @@ export default function GuestRsvpField({
           size="sm"
           className="flex-1"
         >
-          Kan inte komma
+          {text.form.attendingNo}
         </Button>
       </div>
 
