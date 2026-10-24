@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e0dbbb;
+  --background: #f6f2e6;
   --foreground: #2d2a24;
-  --border: #b5ac8a;
+  --border: #d4cbad;
   --muted: #5c564a;
   --subtle: #7d7565;
   --surface-hover: rgba(45, 42, 36, 0.06);

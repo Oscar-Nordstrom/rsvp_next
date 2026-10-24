@@ -31,6 +31,9 @@ export const weddingDetails = {
     }
   ],
   tema: "Fri klädsel",
+  children: "Barn är välkomna!",
+  gift: "Om ni vill ge oss en gåva så är vi glada för ett bidrag till vår bröllopsresa.",
+  speach: "Vill du hålla tal......",
 };
 
 
@@ -56,6 +59,9 @@ export const text = {
     detailsTitle: "Detaljer & schema",
     dateLabel: "Datum",
     dressCodeLabel: "Klädkod",
+    childrenLabel: "Barn",
+    giftLabel: "Gåva",
+    speachLabel: "Tal",
     scheduleLabel: "Schema",
     showOnMap: "Visa på karta",
     close: "Stäng",

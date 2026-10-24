@@ -35,21 +35,25 @@ export default async function RsvpPage({
         <p className="mt-1 text-muted">
           {text.rsvp.welcome}
         </p>
-        <p className="mt-1 text-muted">
+        <p className="mt-1 text-bold underline">
           {DeadlineSentence}
         </p>
       </div>
 
       <div className="flex flex-wrap gap-3 text-sm">
         <InfoButton label={text.rsvp.detailsButton} title={text.rsvp.detailsTitle}>
-          <div>
-            <div className="font-medium text-foreground">{text.rsvp.dateLabel}</div>
-            <div className="text-muted">{weddingDetails.datum}</div>
-          </div>
-          <div>
-            <div className="font-medium text-foreground">{text.rsvp.dressCodeLabel}</div>
-            <div className="text-muted">{weddingDetails.tema}</div>
-          </div>
+          {[
+            [text.rsvp.dateLabel, weddingDetails.datum],
+            [text.rsvp.dressCodeLabel, weddingDetails.tema],
+            [text.rsvp.childrenLabel, weddingDetails.children],
+            [text.rsvp.giftLabel, weddingDetails.gift],
+            [text.rsvp.speachLabel, weddingDetails.speach],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <div className="font-medium text-foreground">{label}</div>
+              <div className="text-muted">{value}</div>
+            </div>
+          ))}
           <div className="flex flex-col gap-3">
             <div className="font-medium text-foreground">{text.rsvp.scheduleLabel}</div>
             {weddingDetails.schema.map((stop, index) => (
