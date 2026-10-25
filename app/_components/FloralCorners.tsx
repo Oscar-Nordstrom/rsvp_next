@@ -222,11 +222,12 @@ function Sprig({ className }: { className: string }) {
   );
 }
 
-// Frames its children with foliage at the top-left and bottom-right.
-// On phones the content spans the screen and the foliage hugs the screen
-// edges, which hide where the stems start. From `sm` up the content sits in
-// a gold double-bordered card, like the printed invitation, and the foliage
-// bursts outward from behind its corners so the card hides the stem ends.
+// Sits the content in a gold double-bordered card, like the printed
+// invitation, with foliage at the top-left and bottom-right. On phones there
+// is no room outside the card, so the foliage lies over its corners starting
+// from the screen edges, which hide where the stems begin. From `sm` up the
+// foliage bursts outward from behind the corners so the card hides the stem
+// ends instead.
 export default function FloralFrame({
   children,
   className = "",
@@ -235,18 +236,18 @@ export default function FloralFrame({
   className?: string;
 }) {
   return (
-    <div className="flex min-h-dvh flex-1 flex-col overflow-hidden sm:justify-center sm:px-8 sm:py-32">
+    <div className="flex min-h-dvh flex-1 flex-col overflow-hidden p-3 sm:justify-center sm:px-8 sm:py-32">
       <FloralDefs />
       <div className="relative mx-auto flex w-full max-w-xl flex-1 flex-col sm:flex-none">
-        <Sprig className="left-0 top-0 sm:hidden" />
-        <Sprig className="bottom-0 right-0 rotate-180 sm:hidden" />
         <Sprig className="bottom-[calc(100%-40px)] right-[calc(100%-40px)] hidden rotate-180 sm:block" />
         <Sprig className="left-[calc(100%-40px)] top-[calc(100%-40px)] hidden sm:block" />
         <div
-          className={`relative flex flex-1 flex-col px-6 py-20 sm:border-[3px] sm:border-gold sm:bg-surface sm:p-12 sm:outline sm:outline-1 sm:-outline-offset-[10px] sm:outline-gold ${className}`}
+          className={`relative flex flex-1 flex-col border-[3px] border-gold bg-surface px-5 py-20 outline outline-offset-[-10px] outline-gold sm:p-12 ${className}`}
         >
           {children}
         </div>
+        <Sprig className="-left-3 -top-3 sm:hidden" />
+        <Sprig className="-bottom-3 -right-3 rotate-180 sm:hidden" />
       </div>
     </div>
   );
