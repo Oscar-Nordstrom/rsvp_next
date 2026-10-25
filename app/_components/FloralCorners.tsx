@@ -204,7 +204,7 @@ function Sprig({ className }: { className: string }) {
       viewBox="0 0 320 110"
       aria-hidden
       overflow="visible"
-      className={`pointer-events-none absolute w-[80%] max-w-[330px] sm:w-[420px] sm:max-w-none ${className}`}
+      className={`pointer-events-none absolute w-[80%] max-w-[330px] sm:w-[300px] sm:max-w-none lg:w-[420px] ${className}`}
     >
       <Branch curve={[[0, 30], [40, 52], [100, 55], [160, 64]]} count={4} kind="outline" size={1.3} seed={2} />
       <Branch curve={[[22, 0], [28, 25], [30, 48], [26, 72]]} count={3} kind="outline" size={1.1} seed={1} />
@@ -223,8 +223,10 @@ function Sprig({ className }: { className: string }) {
 }
 
 // Frames its children with foliage at the top-left and bottom-right.
-// On phones the frame spans the screen, so the foliage sits at its edges;
-// from `sm` up it hugs the content column and reaches out past it.
+// On phones the content spans the screen and the foliage hugs the screen
+// edges, which hide where the stems start. From `sm` up the content sits in
+// a gold double-bordered card, like the printed invitation, and the foliage
+// bursts outward from behind its corners so the card hides the stem ends.
 export default function FloralFrame({
   children,
   className = "",
@@ -233,14 +235,18 @@ export default function FloralFrame({
   className?: string;
 }) {
   return (
-    <div className="flex min-h-dvh flex-1 flex-col overflow-x-hidden sm:justify-center sm:py-12">
+    <div className="flex min-h-dvh flex-1 flex-col overflow-hidden sm:justify-center sm:px-8 sm:py-32">
       <FloralDefs />
-      <div
-        className={`relative mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-20 sm:flex-none sm:px-12 sm:py-28 ${className}`}
-      >
-        <Sprig className="left-0 top-0 sm:-left-16 sm:top-0" />
-        <Sprig className="bottom-0 right-0 rotate-180 sm:-right-16 sm:bottom-0" />
-        <div className="relative flex flex-1 flex-col">{children}</div>
+      <div className="relative mx-auto flex w-full max-w-xl flex-1 flex-col sm:flex-none">
+        <Sprig className="left-0 top-0 sm:hidden" />
+        <Sprig className="bottom-0 right-0 rotate-180 sm:hidden" />
+        <Sprig className="bottom-[calc(100%-40px)] right-[calc(100%-40px)] hidden rotate-180 sm:block" />
+        <Sprig className="left-[calc(100%-40px)] top-[calc(100%-40px)] hidden sm:block" />
+        <div
+          className={`relative flex flex-1 flex-col px-6 py-20 sm:border-[3px] sm:border-gold sm:bg-surface sm:p-12 sm:outline sm:outline-1 sm:-outline-offset-[10px] sm:outline-gold ${className}`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
